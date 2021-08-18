@@ -54,6 +54,7 @@ case $LANGUAGE in
         mix archive.install hex sbom --force
         path="bom.xml"
         BoMResult=$(mix sbom.cyclonedx -d)
+        cat bom.xml
         ;;
 
     *)
