@@ -53,8 +53,7 @@ case $LANGUAGE in
             exit 1
         fi
         curl --proto '=https' --tlsv1.2 -sSf "https://sh.rustup.rs" | bash -s -- -y
-        export PATH=$PATH:$HOME/.cargo/bin
-        cargo install cyclonedx-bom
+        $HOME/.cargo/bin/cargo install cyclonedx-bom
         path="bom.xml"
         BoMResult=$($HOME/.cargo/bin/cyclonedx-bom cyclonedx)
         ;;
