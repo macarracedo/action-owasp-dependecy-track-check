@@ -9,8 +9,7 @@ ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get update && apt-get install -y git nodejs npm \
     python3 python3-pip golang curl jq \
-    ruby-dev make build-essential default-jre maven \ 
-    php php-mbstring php-xml elixir erlang erlang-xmerl \
+    ruby-dev make build-essential \ 
     && apt-get update
 
 # Installing Cyclone BoM generates for the different supported languages

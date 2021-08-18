@@ -56,6 +56,7 @@ case $LANGUAGE in
         $HOME/.cargo/bin/cargo install cyclonedx-bom
         path="bom.xml"
         BoMResult=$($HOME/.cargo/bin/cyclonedx-bom cyclonedx)
+        cat bom.xml
         ;;
 
     *)
