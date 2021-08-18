@@ -22,6 +22,7 @@ case $LANGUAGE in
             echo "[-] Error executing npm install. Stopping the action!"
             exit 1
         fi
+        path="bom.xml"
         BoMResult=$(cyclonedx-bom -s 1.1 -o bom.xml)
         ;;
     
@@ -32,6 +33,7 @@ case $LANGUAGE in
             echo "[-] Error executing pip freeze to get a requirements.txt with frozen parameters. Stopping the action!"
             exit 1
         fi
+        path="bom.xml"
         BoMResult=$(cyclonedx-py -o bom.xml)
         ;;
     
@@ -41,8 +43,41 @@ case $LANGUAGE in
             echo "[-] Error executing go build. Stopping the action!"
             exit 1
         fi
+        path="bom.xml"
         BoMResult=$(cyclonedx-go -o bom.xml)
         ;;
+
+    "erlang")
+        echo "[*]  Processing Hex Rebar3 Erlang BoM"
+        if [ ! $? = 0 ]; then
+            echo "[-] Error executing Erlang build. Stopping the action!"
+            exit 1
+        fi
+        #Default path
+        path="bom.xml"
+
+        #Installing rebar3, erlang's build tool 
+        git clone https://github.com/erlang/rebar3.git 
+        cd rebar3
+        ./bootstrap
+        export PATH=$PATH:$(pwd)
+        cd ..
+
+        # Adding cyclonedx plugin to project
+        echo "List before adding the plugin."
+        ls -l
+        #echo "{rebar3_sbom, \"0.5.0\"}." >> rebar.config
+        echo "{plugins, [rebar3_sbom]}." >> rebar.config
+
+        # Compiling
+        #rebar3 compile
+        #rebar3 deps
+
+        # Generating bom.xml
+        BoMResult=$(rebar3 sbom --force)
+        cat bom.xml
+        ;;
+
     *)
         "[-] Project type not supported: $LANGUAGE"
         exit 1
