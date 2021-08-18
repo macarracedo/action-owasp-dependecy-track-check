@@ -43,6 +43,19 @@ case $LANGUAGE in
         fi
         BoMResult=$(cyclonedx-go -o bom.xml)
         ;;
+    "elixir")
+        echo "[*]  Processing Hex Mix Elixir BoM"
+        if [ ! $? = 0 ]; then
+            echo "[-] Error executing Elixir build. Stopping the action!"
+            exit 1
+        fi
+        mix local.hex --force
+        mix deps.get
+        mix archive.install hex sbom --force
+        path="bom.xml"
+        BoMResult=$(mix sbom.cyclonedx -d)
+        ;;
+
     *)
         "[-] Project type not supported: $LANGUAGE"
         exit 1

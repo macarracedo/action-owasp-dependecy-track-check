@@ -24,6 +24,8 @@ Currently this action supports the generation of upload of projects devloped in 
 - **Node.js**: define the language variable as `nodejs`. `npm install` will be executed within the container to gather all the dependencies.  
 - **Python**: define the language variable as `python`. It will get the package information from requirements.txt. 
 - **Golang**: define the language variable as `golang`. It will get the package information from go.mod, which is typically present in the repository.
+- **Elixir**: define the language variable as `elixir`. It will get the package information from mix.exs. 
+
 
 Please note that if any of the files above is not available the action will fail when trying to generate the BoM files. 
 
