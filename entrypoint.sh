@@ -57,11 +57,10 @@ case $LANGUAGE in
         path="bom.xml"
 
         #Installing rebar3, erlang's build tool 
-        git clone https://github.com/erlang/rebar3.git 
-        cd rebar3
-        ./bootstrap
-        export PATH=$PATH:$(pwd)
-        cd ..
+        pwd
+        dir=$(pwd)
+        curl -sS "https://s3.amazonaws.com/rebar3/rebar3" -o rebar3
+        
 
         # Adding cyclonedx plugin to project
         echo "List before adding the plugin."
@@ -74,7 +73,7 @@ case $LANGUAGE in
         #rebar3 deps
 
         # Generating bom.xml
-        BoMResult=$(rebar3 sbom --force)
+        BoMResult=$(dir/rebar3 sbom --force)
         cat bom.xml
         ;;
 
