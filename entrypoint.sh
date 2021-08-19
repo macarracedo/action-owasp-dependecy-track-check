@@ -56,24 +56,20 @@ case $LANGUAGE in
         #Default path
         path="bom.xml"
 
-        #Installing rebar3, erlang's build tool 
-        pwd
-        dir=$(pwd)
+        #Installing rebar3, erlang's build tool
+        #mkdir rebar3
+        #cd rebar3
         curl -sS "https://s3.amazonaws.com/rebar3/rebar3" -o rebar3
-        
+        chmod +x rebar3
+        #cd ..
+        # rebar3 should be in $PATH
+        #echo $PATH
 
         # Adding cyclonedx plugin to project
-        echo "List before adding the plugin."
-        ls -l
-        #echo "{rebar3_sbom, \"0.5.0\"}." >> rebar.config
         echo "{plugins, [rebar3_sbom]}." >> rebar.config
 
-        # Compiling
-        #rebar3 compile
-        #rebar3 deps
-
         # Generating bom.xml
-        BoMResult=$(dir/rebar3 sbom --force)
+        BoMResult=$(./rebar3 sbom --force)
         cat bom.xml
         ;;
 
