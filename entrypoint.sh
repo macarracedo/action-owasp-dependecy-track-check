@@ -53,18 +53,25 @@ case $LANGUAGE in
             echo "[-] Error executing Erlang build. Stopping the action!"
             exit 1
         fi
-        #Default path
+        # Default path
         path="bom.xml"
 
-        #Installing rebar3, erlang's build tool
-        curl -sS "https://s3.amazonaws.com/rebar3/rebar3" -o rebar3
-        chmod +x rebar3
+        # Installing rebar3, erlang's build tool
+        #curl -sS "https://s3.amazonaws.com/rebar3/rebar3" -o rebar3
+        #chmod +x rebar3
 
+        # Build rebar3 from source. 
+        git clone https://github.com/erlang/rebar3.git
+        cd rebar3
+        ./bootstrap
+        ls -la #test
+        cd ..
+        
         # Adding cyclonedx plugin to project
         echo "{plugins, [rebar3_sbom]}." >> rebar.config
 
         # Generating bom.xml
-        BoMResult=$(./rebar3 sbom --force)
+        BoMResult=$(./rebar3/rebar3 sbom --force)
         ;;
 
     *)
