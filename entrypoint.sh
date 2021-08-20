@@ -57,20 +57,14 @@ case $LANGUAGE in
         path="bom.xml"
 
         #Installing rebar3, erlang's build tool
-        #mkdir rebar3
-        #cd rebar3
         curl -sS "https://s3.amazonaws.com/rebar3/rebar3" -o rebar3
         chmod +x rebar3
-        #cd ..
-        # rebar3 should be in $PATH
-        #echo $PATH
 
         # Adding cyclonedx plugin to project
         echo "{plugins, [rebar3_sbom]}." >> rebar.config
 
         # Generating bom.xml
         BoMResult=$(./rebar3 sbom --force)
-        cat bom.xml
         ;;
 
     *)
@@ -80,7 +74,7 @@ case $LANGUAGE in
 esac    
 
 if [ ! $? = 0 ]; then
-    echo "[-] Error generating BoM file: $BomResult. Stopping the action!"
+    echo "[-] Error generating BoM file: $BoMResult. Stopping the action!"
     exit 1
 fi
 
@@ -94,7 +88,7 @@ upload_bom=$(curl $INSECURE $VERBOSE -s --location --request POST $DTRACK_URL/ap
 --form "autoCreate=true" \
 --form "projectName=$GITHUB_REPOSITORY" \
 --form "projectVersion=$GITHUB_REF" \
---form "bom=@bom.xml")
+--form "bom=@$path")
 
 token=$(echo $upload_bom | jq ".token" | tr -d "\"")
 echo "[*] BoM file succesfully uploaded with token $token"
