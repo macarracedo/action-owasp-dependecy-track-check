@@ -10,8 +10,6 @@ INSECURE="--insecure"
 # Access directory where GitHub will mount the repository code
 # $GITHUB_ variables are directly accessible in the script
 cd $GITHUB_WORKSPACE
-find=$(find / -name "cyclonedx-go")
-echo $find
 
 case $LANGUAGE in
     "nodejs")
@@ -47,6 +45,26 @@ case $LANGUAGE in
         BoMResult=$(cyclonedx-go -o bom.xml)
         ;;
 
+    "ruby")
+        echo "[*]  Processing Ruby BoM"
+        if [ ! $? = 0 ]; then
+            echo "[-] Error executing Ruby build. Stopping the action!"
+            exit 1
+        fi
+        path="bom.xml"
+        BoMResult=$(cyclonedx-ruby -p ./ -o bom.xml)
+        ;;
+
+    "java")
+        echo "[*]  Processing Java BoM"
+        if [ ! $? = 0 ]; then
+            echo "[-] Error executing Java build. Stopping the action!"
+            exit 1
+        fi
+        path="target/bom.xml"
+        BoMResult=$(mvn compile)
+        ;;
+        
     "dotnet")
         echo "[*]  Processing Golang BoM"
         if [ ! $? = 0 ]; then
@@ -59,6 +77,7 @@ case $LANGUAGE in
         # a directory which will be recursively analyzed for packages.config files
         BoMResult=$(dotnet CycloneDX . -o bom.xml)
         ;;
+
 
     *)
         "[-] Project type not supported: $LANGUAGE"
